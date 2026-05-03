@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VotePortal — Admin Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body class="dash-body admin-body">
+  <aside class="sidebar admin-sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">🛡️</span>
+      <span class="brand-name">Admin Panel</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="nav-link active" data-tab="overview" onclick="switchTab('overview')">
+        <span class="nav-icon">📊</span> Overview
+      </a>
+      <a class="nav-link" data-tab="election" onclick="switchTab('election')">
+        <span class="nav-icon">🗳️</span> Election Control
+      </a>
+      <a class="nav-link" data-tab="candidates" onclick="switchTab('candidates')">
+        <span class="nav-icon">👥</span> Candidates
+      </a>
+      <a class="nav-link" data-tab="voters" onclick="switchTab('voters')">
+        <span class="nav-icon">📋</span> Voters
+      </a>
+      <a class="nav-link" data-tab="results" onclick="switchTab('results')">
+        <span class="nav-icon">🏆</span> Results
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="voter-info">
+        <div class="voter-avatar admin-av">A</div>
+        <div>
+          <div class="voter-name" id="admin-name">Admin</div>
+          <div class="voter-role" style="color:#f59e0b">Administrator</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="logout()">Sign Out</button>
+    </div>
+  </aside>
+
+  <main class="dash-main">
+    <!-- OVERVIEW TAB -->
+    <div id="tab-overview" class="tab-content active">
+      <div class="dash-header">
+        <div>
+          <h1>Dashboard Overview</h1>
+          <p class="dash-subtitle" id="election-title-overview">Loading...</p>
+        </div>
+        <div class="election-badge" id="overview-badge">
+          <span class="badge-dot"></span>
+          <span id="overview-status">Checking...</span>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-icon">👥</div>
+          <div class="stat-card-val" id="stat-total-voters">—</div>
+          <div class="stat-card-label">Total Voters</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon">✅</div>
+          <div class="stat-card-val" id="stat-voted">—</div>
+          <div class="stat-card-label">Votes Cast</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon">📈</div>
+          <div class="stat-card-val" id="stat-turnout">—%</div>
+          <div class="stat-card-label">Voter Turnout</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon">🎯</div>
+          <div class="stat-card-val" id="stat-candidates-count">—</div>
+          <div class="stat-card-label">Candidates</div>
+        </div>
+      </div>
+
+      <div class="section-title">Vote Distribution</div>
+      <div id="overview-chart" class="chart-container">
+        <div class="info-card">
+          <p>No votes yet or election pending.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ELECTION CONTROL TAB -->
+    <div id="tab-election" class="tab-content">
+      <div class="dash-header">
+        <h1>Election Control</h1>
+        <p class="dash-subtitle">Manage the election lifecycle</p>
+      </div>
+
+      <div class="control-grid">
+        <div class="control-card">
+          <h3>Election Settings</h3>
+          <div class="form-group">
+            <label>Election Title</label>
+            <input type="text" id="el-title" placeholder="e.g. General Election 2024" />
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="el-desc" rows="3" placeholder="Brief description..."></textarea>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="updateElectionSettings()">Save Settings</button>
+        </div>
+
+        <div class="control-card">
+          <h3>Election Controls</h3>
+          <div class="current-status-box" id="status-box">
+            <div class="status-indicator" id="status-indicator"></div>
+            <div>
+              <strong id="status-label">Checking...</strong>
+              <p id="status-detail" style="margin:0;font-size:0.85rem;opacity:0.7"></p>
+            </div>
+          </div>
+          <div class="control-btns">
+            <button class="btn btn-success" id="btn-start" onclick="controlElection('start')">▶ Start Election</button>
+            <button class="btn btn-danger" id="btn-stop" onclick="controlElection('stop')">⏹ End Election</button>
+            <button class="btn btn-warning" id="btn-reset" onclick="controlElection('reset')">↺ Reset All Data</button>
+          </div>
+          <p class="reset-warning">⚠️ Reset clears all votes and voting records. This cannot be undone.</p>
+        </div>
+      </div>
+      <div id="election-msg" class="vote-message" style="display:none;margin-top:1rem"></div>
+    </div>
+
+    <!-- CANDIDATES TAB -->
+    <div id="tab-candidates" class="tab-content">
+      <div class="dash-header">
+        <h1>Manage Candidates</h1>
+        <button class="btn btn-primary btn-sm" onclick="toggleAddForm()">+ Add Candidate</button>
+      </div>
+
+      <!-- Add Candidate Form -->
+      <div class="add-form-card" id="add-form-card" style="display:none">
+        <h3>Add New Candidate</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" id="c-name" placeholder="Candidate name" />
+          </div>
+          <div class="form-group">
+            <label>Party / Affiliation *</label>
+            <input type="text" id="c-party" placeholder="Party name" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Symbol / Emoji</label>
+            <input type="text" id="c-symbol" placeholder="e.g. ⭐ 🦁 🌹" maxlength="4" />
+          </div>
+          <div class="form-group">
+            <label>Theme Color</label>
+            <input type="color" id="c-color" value="#4f46e5" style="height:42px;width:100%;border-radius:8px;border:none;cursor:pointer" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Short Bio</label>
+          <textarea id="c-bio" rows="2" placeholder="Brief candidate bio..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Key Agenda</label>
+          <textarea id="c-agenda" rows="2" placeholder="Main policy points..."></textarea>
+        </div>
+        <div id="add-cand-msg" class="vote-message" style="display:none"></div>
+        <div style="display:flex;gap:1rem">
+          <button class="btn btn-primary" onclick="addCandidate()">Add Candidate</button>
+          <button class="btn btn-ghost" onclick="toggleAddForm()">Cancel</button>
+        </div>
+      </div>
+
+      <div class="candidates-admin-grid" id="admin-candidates-grid">
+        <div class="loading-spinner">Loading...</div>
+      </div>
+    </div>
+
+    <!-- VOTERS TAB -->
+    <div id="tab-voters" class="tab-content">
+      <div class="dash-header">
+        <h1>Registered Voters</h1>
+        <button class="btn btn-outline btn-sm" onclick="loadVoters()">↻ Refresh</button>
+      </div>
+      <div class="table-card">
+        <table class="voters-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Voted For</th>
+              <th>Registered</th>
+            </tr>
+          </thead>
+          <tbody id="voters-tbody">
+            <tr><td colspan="6" style="text-align:center;padding:2rem;opacity:0.5">Loading voters...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RESULTS TAB -->
+    <div id="tab-results" class="tab-content">
+      <div class="dash-header">
+        <h1>Election Results</h1>
+        <button class="btn btn-outline btn-sm" onclick="loadResults()">↻ Refresh</button>
+      </div>
+      <div id="admin-results-content">
+        <div class="loading-spinner">Loading results...</div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VotePortal — Secure Online Elections</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body>
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- LANDING -->
+  <section id="landing" class="page active">
+    <nav class="navbar">
+      <div class="nav-brand">
+        <span class="brand-icon">🗳️</span>
+        <span class="brand-name">VotePortal</span>
+      </div>
+      <div class="nav-actions">
+        <button class="btn btn-ghost" onclick="showPage('login')">Sign In</button>
+        <button class="btn btn-primary" onclick="showPage('register')">Register to Vote</button>
+      </div>
+    </nav>
+
+    <div class="hero">
+      <div class="hero-content">
+        <div class="hero-badge">🔒 Secure · Transparent · Fair</div>
+        <h1 class="hero-title">Your Voice.<br /><em>Your Vote.</em></h1>
+        <p class="hero-sub">Participate in a secure, real-time democratic election process. Every vote counts and is counted correctly.</p>
+        <div class="hero-cta">
+          <button class="btn btn-xl btn-primary" onclick="showPage('register')">Register Now</button>
+          <button class="btn btn-xl btn-outline" onclick="showPage('login')">I'm Already Registered</button>
+        </div>
+        <div class="hero-stats" id="hero-stats">
+          <div class="stat-item"><span class="stat-num" id="stat-voters">—</span><span class="stat-label">Registered Voters</span></div>
+          <div class="stat-sep"></div>
+          <div class="stat-item"><span class="stat-num" id="stat-candidates">—</span><span class="stat-label">Candidates</span></div>
+          <div class="stat-sep"></div>
+          <div class="stat-item"><span class="stat-num" id="stat-status">—</span><span class="stat-label">Election Status</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="ballot-card">
+          <div class="ballot-header">OFFICIAL BALLOT</div>
+          <div class="ballot-lines">
+            <div class="ballot-line"><span class="ballot-dot active"></span><span>Cast Your Vote</span></div>
+            <div class="ballot-line"><span class="ballot-dot"></span><span>Make a Difference</span></div>
+            <div class="ballot-line"><span class="ballot-dot"></span><span>Shape the Future</span></div>
+          </div>
+          <div class="ballot-seal">✦ VERIFIED ✦</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGIN -->
+  <section id="login" class="page">
+    <nav class="navbar">
+      <div class="nav-brand" onclick="showPage('landing')" style="cursor:pointer">
+        <span class="brand-icon">🗳️</span>
+        <span class="brand-name">VotePortal</span>
+      </div>
+    </nav>
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <h2>Welcome Back</h2>
+          <p>Sign in to access your voting dashboard</p>
+        </div>
+        <form class="auth-form" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="login-email" placeholder="you@example.com" required />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="login-password" placeholder="••••••••" required />
+          </div>
+          <div class="form-error" id="login-error"></div>
+          <button type="submit" class="btn btn-primary btn-full" id="login-btn">
+            <span>Sign In</span>
+          </button>
+        </form>
+        <p class="auth-switch">New voter? <a href="#" onclick="showPage('register')">Register here</a></p>
+        <p class="auth-switch" style="font-size:0.78rem;opacity:0.5">Admin? Use admin key during registration.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGISTER -->
+  <section id="register" class="page">
+    <nav class="navbar">
+      <div class="nav-brand" onclick="showPage('landing')" style="cursor:pointer">
+        <span class="brand-icon">🗳️</span>
+        <span class="brand-name">VotePortal</span>
+      </div>
+    </nav>
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <h2>Register to Vote</h2>
+          <p>Create your secure voter account</p>
+        </div>
+        <form class="auth-form" onsubmit="handleRegister(event)">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="reg-name" placeholder="Your full name" required />
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="reg-email" placeholder="you@example.com" required />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="reg-password" placeholder="Min. 6 characters" required />
+          </div>
+          <div class="form-group">
+            <label>Admin Key <span style="opacity:0.5;font-weight:400">(optional — leave blank for voter)</span></label>
+            <input type="password" id="reg-adminkey" placeholder="Admin access key" />
+          </div>
+          <div class="form-error" id="reg-error"></div>
+          <button type="submit" class="btn btn-primary btn-full" id="reg-btn">
+            <span>Create Account</span>
+          </button>
+        </form>
+        <p class="auth-switch">Already registered? <a href="#" onclick="showPage('login')">Sign in</a></p>
+      </div>
+    </div>
+  </section>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

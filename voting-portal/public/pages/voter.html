@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VotePortal — Voter Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+</head>
+<body class="dash-body">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">🗳️</span>
+      <span class="brand-name">VotePortal</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="nav-link active" data-tab="vote" onclick="switchTab('vote')">
+        <span class="nav-icon">✉️</span> Cast Vote
+      </a>
+      <a class="nav-link" data-tab="results" onclick="switchTab('results')">
+        <span class="nav-icon">📊</span> Results
+      </a>
+      <a class="nav-link" data-tab="profile" onclick="switchTab('profile')">
+        <span class="nav-icon">👤</span> My Profile
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="voter-info">
+        <div class="voter-avatar" id="voter-avatar">V</div>
+        <div>
+          <div class="voter-name" id="voter-name">Voter</div>
+          <div class="voter-role">Registered Voter</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="logout()">Sign Out</button>
+    </div>
+  </aside>
+
+  <main class="dash-main">
+    <!-- VOTE TAB -->
+    <div id="tab-vote" class="tab-content active">
+      <div class="dash-header">
+        <div>
+          <h1 id="election-title">Loading Election...</h1>
+          <p id="election-desc" class="dash-subtitle"></p>
+        </div>
+        <div class="election-badge" id="election-badge">
+          <span class="badge-dot"></span>
+          <span id="election-status-text">Checking...</span>
+        </div>
+      </div>
+
+      <!-- Already Voted Banner -->
+      <div class="voted-banner" id="voted-banner" style="display:none">
+        <div class="voted-banner-icon">✅</div>
+        <div>
+          <strong>Your vote has been cast!</strong>
+          <p>You voted for <span id="voted-for-name"></span>. Thank you for participating.</p>
+        </div>
+      </div>
+
+      <!-- Election Not Active -->
+      <div class="info-card" id="election-inactive" style="display:none">
+        <div class="info-icon">⏳</div>
+        <h3 id="inactive-title">Election Not Started</h3>
+        <p id="inactive-msg">The election has not started yet. Please check back later.</p>
+      </div>
+
+      <!-- Candidates Grid -->
+      <div id="candidates-section">
+        <h2 class="section-title">Candidates</h2>
+        <div class="candidates-grid" id="candidates-grid">
+          <div class="loading-spinner">Loading candidates...</div>
+        </div>
+        <div id="vote-msg" class="vote-message" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- RESULTS TAB -->
+    <div id="tab-results" class="tab-content">
+      <div class="dash-header">
+        <div>
+          <h1>Election Results</h1>
+          <p class="dash-subtitle">Live vote tally</p>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="loadResults()">↻ Refresh</button>
+      </div>
+      <div id="results-content">
+        <div class="info-card">
+          <div class="info-icon">🔒</div>
+          <h3>Results Not Available</h3>
+          <p>Results will be shown once the election begins.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE TAB -->
+    <div id="tab-profile" class="tab-content">
+      <div class="dash-header">
+        <h1>My Profile</h1>
+      </div>
+      <div class="profile-card">
+        <div class="profile-avatar" id="profile-avatar">V</div>
+        <div class="profile-details">
+          <div class="profile-field"><label>Full Name</label><span id="profile-name">—</span></div>
+          <div class="profile-field"><label>Role</label><span>Registered Voter</span></div>
+          <div class="profile-field"><label>Voting Status</label><span id="profile-voted">—</span></div>
+          <div class="profile-field"><label>Voted For</label><span id="profile-voted-for">—</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Vote Confirmation Modal -->
+  <div class="modal-overlay" id="vote-modal" style="display:none">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Confirm Your Vote</h3>
+      </div>
+      <div class="modal-body">
+        <p>You are about to vote for:</p>
+        <div class="confirm-candidate">
+          <div class="confirm-symbol" id="confirm-symbol"></div>
+          <div>
+            <div class="confirm-name" id="confirm-name"></div>
+            <div class="confirm-party" id="confirm-party"></div>
+          </div>
+        </div>
+        <p class="modal-warning">⚠️ This action cannot be undone. You can only vote once.</p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="confirmVote()">Confirm Vote</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/voter.js"></script>
+</body>
+</html>
